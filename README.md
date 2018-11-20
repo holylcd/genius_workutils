@@ -1,16 +1,18 @@
-### Auxiliary development tools
+### Development aids (personal use)
 
-`Format Util`    `Geniustec`    `Personal`
+`Format Util`    `Generate random numbers`    `Personal`
 
 ---
 
 - Example
-    ```
-    demo0
-    demo1
-    ```
-    add
-    ```
-    <Prefix text> demo0 <Suffix text>
-    <Prefix text> demo1 <Suffix text>
-    ```
+    1. Format Util
+        ```
+        demo0
+        demo1
+        ```
+        add
+        ```
+        <Prefix text> demo0 <Suffix text>
+        <Prefix text> demo1 <Suffix text>
+        ```
+    2. Generate random numbers
