@@ -115,42 +115,52 @@
     <div id="warp">
         <div class="content">
             <div class="left">
-                <textarea name="left_textarea" id="left_textarea" onscroll="scrollSync(this)" onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
-                    placeholder="demo"></textarea>
+                <textarea name="left_textarea" id="left_textarea" onscroll="scrollSync(this)" 
+                    onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()" 
+                    placeholder="demo">
+                </textarea>
             </div>
             <div class="middle">
                 <input name="prefix" id="prefix" placeholder="单行前缀" onkeyup="updateConfig(this)">
                 <input name="suffix" id="suffix" placeholder="单行后缀" onkeyup="updateConfig(this)">
                 <div class="checkbox_div_remove_spaces">
                     <label for="" style="font-size: 14px;">消除空格： </label>
-                    <input type="checkbox" name="remove_spaces" id="remove_spaces" onclick="updateConfig(this)">
+                    <input type="checkbox" name="remove_spaces" id="remove_spaces" 
+                        onclick="updateConfig(this)">
                 </div>
                 <div class="checkbox_div_scroll_sync">
                     <label for="" style="font-size: 14px;">滚动同步： </label>
-                    <input type="checkbox" name="scroll_sync" id="scroll_sync" onclick="updateConfig(this)">
+                    <input type="checkbox" name="scroll_sync" id="scroll_sync" 
+                        onclick="updateConfig(this)">
                 </div>
-                <input name="resetCache" type="button" value="reset" title="重置使用习惯" onclick="resetCache()">
-                <br/>
-                <input name="resetLeftText" type="button" value="&lt;&lt;清空" onclick="clearText(0)">
-                <br/>
-                <input name="resetRightText" type="button" value="清空&gt;&gt;" onclick="clearText(1);">
-                <br/>
-                <input name="add" type="button" value="添加&gt;&gt;" onclick="add()" title="Ctrl+Shift+A">
-                <br/>
-                <input name="remove" type="button" value="&lt;&lt;移除" onclick="remove()" title="Ctrl+Shift+E">
-                <br/>
+                <input name="resetCache" type="button" value="reset" title="重置使用习惯" 
+                    onclick="resetCache()">
+                <br />
+                <input name="resetLeftText" type="button" value="&lt;&lt;清空" 
+                    onclick="clearText(0)">
+                <br />
+                <input name="resetRightText" type="button" value="清空&gt;&gt;" 
+                    onclick="clearText(1);">
+                <br />
+                <input name="add" type="button" value="添加&gt;&gt;" onclick="add()" 
+                    title="Ctrl+Shift+A">
+                <br />
+                <input name="remove" type="button" value="&lt;&lt;移除" onclick="remove()" 
+                    title="Ctrl+Shift+E">
+                <br />
             </div>
             <div class="right">
-                <textarea name="right_textarea" id="right_textarea" onscroll="scrollSync(this)" onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
-                    placeholder='sql.append(" demo ");'></textarea>
+                <textarea name="right_textarea" id="right_textarea" onscroll="scrollSync(this)"
+                    onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
+                    placeholder='sql.append(" demo ");'>
+                </textarea>
             </div>
         </div>
         <div class="footer">
             <font size='2'>
                 <author title="恭喜你发现了隐藏彩蛋" id="author" onclick="easterEgg()">holy</author> |
                 <version>v_2.1.2</version> |
-                <date>2018</date> |
-                <label id="sourceCode" onclick="downloadSourceCode()" title="源码">Code</label>
+                <date>2018</date>
             </font>
         </div>
     </div>
@@ -170,7 +180,7 @@
                 config: {
                     prefix: 'sql.append(" ',
                     suffix: ' ");',
-                    remove_spaces: true,
+                    remove_spaces: false,
                     scroll_sync: true,
                     background_url: null
                 }
@@ -198,15 +208,17 @@
                 text = document.getElementById('left_textarea').value;
             text = sqlFormatCache.config.remove_spaces ? text.trim() : text;
             console.log("left_text: " + text);
-            text = text.split('\n').forEach(function(element) {
+            text = text.split('\n').forEach(function (element) {
                 if (0 < element.trim().length) {
                     if (sqlFormatCache.config.remove_spaces) {
                         element = element.trim();
                     }
-                    result += sqlFormatCache.config.prefix + element + sqlFormatCache.config.suffix + '\n';
+                    result += sqlFormatCache.config.prefix + element 
+                        + sqlFormatCache.config.suffix + '\n';
                 }
             });
-            document.getElementById('right_textarea').value = result.substring(0, result.length - 1);
+            document.getElementById('right_textarea').value = result
+                .substring(0, result.length - 1);
         }
 
         /* 删除 */
@@ -215,11 +227,13 @@
                 text = document.getElementById('right_textarea').value;
             text = sqlFormatCache.config.remove_spaces ? text.trim() : text;
             console.log("right_text: " + text);
-            text = text.split('\n').forEach(function(element) {
-                if (-1 < element.indexOf(sqlFormatCache.config.prefix.trim()) && -1 < element.indexOf(
-                        sqlFormatCache.config.suffix.trim())) {
-                    element = element.replace(sqlFormatCache.config.prefix.trim(), '').replace(sqlFormatCache.config
-                        .suffix.trim(), '');
+            text = text.split('\n').forEach(function (element) {
+                if (-1 < element.indexOf(sqlFormatCache.config.prefix.trim()) 
+                    && -1 < element.indexOf(sqlFormatCache.config.suffix.trim())) {
+
+                    element = element.replace(sqlFormatCache.config.prefix.trim(), '')
+                        .replace(sqlFormatCache.config.suffix.trim(), '');
+                
                 } else {
                     if (0 == element.trim().length) {
                         if (sqlFormatCache.config.remove_spaces) {
@@ -236,18 +250,19 @@
 
                 result += element + '\n';
             });
-            document.getElementById('left_textarea').value = result.substring(0, result.length - 1);
+            document.getElementById('left_textarea').value = result
+                .substring(0, result.length - 1);
 
         }
         /*清空文本框*/
-        function clearText(f){
-            if(0 == f){
+        function clearText(f) {
+            if (0 == f) {
                 document.getElementById('left_textarea').value = '';
             }
-            if(1 == f){
+            if (1 == f) {
                 document.getElementById('right_textarea').value = '';
             }
-            
+
         }
 
         /* 设置配置参数 */
@@ -277,7 +292,8 @@
             if (sqlFormatCache.config.scroll_sync && el == document.activeElement) {
                 var name = ('left_textarea' == el.name ? 'right_textarea' : 'left_textarea'),
                     target = document.getElementById(name);
-                target.scrollTop = (target.scrollHeight - el.clientHeight) * el.scrollTop / (el.scrollHeight - el.clientHeight);
+                target.scrollTop = (target.scrollHeight - el.clientHeight) * el.scrollTop 
+                    / (el.scrollHeight - el.clientHeight);
             }
         }
 
@@ -331,11 +347,9 @@
         /* 文本框键盘事件 */
         function textAreaKeyEvent() {
             var x;
-            if (window.event) /* IE8 及更早IE版本*/
-            {
+            if (window.event) /* IE8 及更早IE版本*/ {
                 x = event.keyCode;
-            } else if (event.which) /* IE9/Firefox/Chrome/Opera/Safari*/
-            {
+            } else if (event.which) /* IE9/Firefox/Chrome/Opera/Safari*/ {
                 x = event.which;
             }
             if (event.ctrlKey && event.shiftKey && 1 == x) {
@@ -349,28 +363,9 @@
         /* 更换背景图片 */
         function changeBackground(background_url) {
             if (null != background_url) {
-                document.body.style.background = 'url(' + background_url + ')  center center / cover no-repeat';
-                /* document.body.style.background = 'url(' + background_url + ')';
-                document.body.style.backgroundColor = 'aquamarine';
-                document.body.style.backgroundRepeat = 'no-repeat no-repeat';
-                document.body.style.backgroundAttachment = 'scroll';
-                document.body.style.backgroundPosition = 'center center';
-                document.body.style.backgroundSize = '100% 100%';
-                center center / 100% 100% no-repeat scroll aquamarine;
-
-                document.body.style.backgroundOrigin = 'body';
-                document.body.style.backgroundClip = 'body'; */
+                document.body.style.background = 'url(' + background_url 
+                    + ')  center center / cover no-repeat';
             }
-        }
-
-        /* 下载源码 */
-        function downloadSourceCode(url) {
-            var a = document.createElement("a");
-            a.setAttribute("href", 'javascript:;');
-            a.setAttribute("target", "_blank");
-            a.setAttribute("id", "openwin");
-            document.body.appendChild(a);
-            a.click();
         }
 
         /* 彩蛋 */
