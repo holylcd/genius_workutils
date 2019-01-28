@@ -109,14 +109,59 @@
             cursor: pointer;
         }
     </style>
+</head>
+
+<body>
+    <div id="warp">
+        <div class="content">
+            <div class="left">
+                <textarea name="left_textarea" id="left_textarea" onscroll="scrollSync(this)" onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
+                    placeholder="demo"></textarea>
+            </div>
+            <div class="middle">
+                <input name="prefix" id="prefix" placeholder="单行前缀" onkeyup="updateConfig(this)">
+                <input name="suffix" id="suffix" placeholder="单行后缀" onkeyup="updateConfig(this)">
+                <div class="checkbox_div_remove_spaces">
+                    <label for="" style="font-size: 14px;">消除空格： </label>
+                    <input type="checkbox" name="remove_spaces" id="remove_spaces" onclick="updateConfig(this)">
+                </div>
+                <div class="checkbox_div_scroll_sync">
+                    <label for="" style="font-size: 14px;">滚动同步： </label>
+                    <input type="checkbox" name="scroll_sync" id="scroll_sync" onclick="updateConfig(this)">
+                </div>
+                <input name="resetCache" type="button" value="reset" title="重置使用习惯" onclick="resetCache()">
+                <br/>
+                <input name="resetLeftText" type="button" value="&lt;&lt;清空" onclick="clearText(0)">
+                <br/>
+                <input name="resetRightText" type="button" value="清空&gt;&gt;" onclick="clearText(1);">
+                <br/>
+                <input name="add" type="button" value="添加&gt;&gt;" onclick="add()" title="Ctrl+Shift+A">
+                <br/>
+                <input name="remove" type="button" value="&lt;&lt;移除" onclick="remove()" title="Ctrl+Shift+E">
+                <br/>
+            </div>
+            <div class="right">
+                <textarea name="right_textarea" id="right_textarea" onscroll="scrollSync(this)" onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
+                    placeholder='sql.append(" demo ");'></textarea>
+            </div>
+        </div>
+        <div class="footer">
+            <span size='2'>
+                <author title="恭喜你发现了隐藏彩蛋" id="author" onclick="easterEgg()">holy</author> |
+                <version>v_2.1.2</version> |
+                <date>2018</date> |
+                <label id="sourceCode" onclick="downloadSourceCode()" title="源码">Code</label>
+            </span>
+        </div>
+    </div>
 
     <script>
         /* 本地缓存信息 */
-        let sqlFormatCache;
+        var sqlFormatCache;
 
         /* 本地存储信息处理的封装 */
-        const storageUtil = {
-            // 初始数据
+        var storageUtil = {
+            /*初始数据*/
             initData: {
                 textarea_use_info: {
                     left_textarea_useTimes: 0,
@@ -130,15 +175,15 @@
                     background_url: null
                 }
             },
-            setData(key, data) {
+            setData: function setData(key, data) {
                 if ('undefined' == typeof data || null == data) {
                     localStorage.setItem(key, JSON.stringify(this.initData));
                 } else {
                     localStorage.setItem(key, JSON.stringify(data));
                 }
             },
-            getData(key) {
-                let data = localStorage.getItem(key);
+            getData: function getData(key) {
+                var data = localStorage.getItem(key);
                 if ('undefined' == typeof data || null == data) {
                     this.setData(key, null);
                     data = localStorage.getItem(key);
@@ -149,11 +194,11 @@
 
         /* 添加 */
         function add() {
-            let result = '',
+            var result = '',
                 text = document.getElementById('left_textarea').value;
             text = sqlFormatCache.config.remove_spaces ? text.trim() : text;
             console.log("left_text: " + text);
-            text = text.split('\n').forEach(element => {
+            text = text.split('\n').forEach(function(element) {
                 if (0 < element.trim().length) {
                     if (sqlFormatCache.config.remove_spaces) {
                         element = element.trim();
@@ -166,11 +211,11 @@
 
         /* 删除 */
         function remove() {
-            let result = '',
+            var result = '',
                 text = document.getElementById('right_textarea').value;
             text = sqlFormatCache.config.remove_spaces ? text.trim() : text;
             console.log("right_text: " + text);
-            text = text.split('\n').forEach(element => {
+            text = text.split('\n').forEach(function(element) {
                 if (-1 < element.indexOf(sqlFormatCache.config.prefix.trim()) && -1 < element.indexOf(
                         sqlFormatCache.config.suffix.trim())) {
                     element = element.replace(sqlFormatCache.config.prefix.trim(), '').replace(sqlFormatCache.config
@@ -194,9 +239,20 @@
             document.getElementById('left_textarea').value = result.substring(0, result.length - 1);
 
         }
+        /*清空文本框*/
+        function clearText(f){
+            if(0 == f){
+                document.getElementById('left_textarea').value = '';
+            }
+            if(1 == f){
+                document.getElementById('right_textarea').value = '';
+            }
+            
+        }
+
         /* 设置配置参数 */
         function updateConfig(el) {
-            let name = el.name;
+            var name = el.name;
             switch (name) {
                 case 'prefix':
                     sqlFormatCache.config.prefix = el.value;
@@ -219,7 +275,7 @@
         /* 滚动同步 */
         function scrollSync(el) {
             if (sqlFormatCache.config.scroll_sync && el == document.activeElement) {
-                let name = ('left_textarea' == el.name ? 'right_textarea' : 'left_textarea'),
+                var name = ('left_textarea' == el.name ? 'right_textarea' : 'left_textarea'),
                     target = document.getElementById(name);
                 target.scrollTop = (target.scrollHeight - el.clientHeight) * el.scrollTop / (el.scrollHeight - el.clientHeight);
             }
@@ -227,13 +283,13 @@
 
         /* 记录文本框的使用情况 */
         function recordTextareaUseInfo(el) {
-            let useTimes = sqlFormatCache.textarea_use_info[el.name + '_useTimes'];
+            var useTimes = sqlFormatCache.textarea_use_info[el.name + '_useTimes'];
             sqlFormatCache.textarea_use_info[el.name + '_useTimes'] = isNaN(Number(useTimes)) ? 0 : ++useTimes;
         }
 
         /* 设置文本框获得焦点 */
         function setfocus() {
-            let leftUseTimes = sqlFormatCache.textarea_use_info.left_textarea_useTimes,
+            var leftUseTimes = sqlFormatCache.textarea_use_info.left_textarea_useTimes,
                 rightUseTime = sqlFormatCache.textarea_use_info.right_textarea_useTimes;
             if (leftUseTimes >= rightUseTime) {
                 document.getElementById('left_textarea').focus();
@@ -261,7 +317,7 @@
         /* 初始化 */
         function init() {
             sqlFormatCache = storageUtil.getData('work_cache1205');
-            // TODO 如果出现新配置参数，此处需要合并 现用配置 和 初始配置
+            /*TODO 如果出现新配置参数，此处需要合并 现用配置 和 初始配置*/
             setfocus();
             setConfig();
             changeBackground(sqlFormatCache.config.background_url);
@@ -275,15 +331,13 @@
         /* 文本框键盘事件 */
         function textAreaKeyEvent() {
             var x;
-            if (window.event) // IE8 及更早IE版本
+            if (window.event) /* IE8 及更早IE版本*/
             {
                 x = event.keyCode;
-            } else if (event.which) // IE9/Firefox/Chrome/Opera/Safari
+            } else if (event.which) /* IE9/Firefox/Chrome/Opera/Safari*/
             {
                 x = event.which;
             }
-            // console.log(x);
-            // console.log(String.fromCharCode(x));
             if (event.ctrlKey && event.shiftKey && 1 == x) {
                 add();
             }
@@ -296,23 +350,23 @@
         function changeBackground(background_url) {
             if (null != background_url) {
                 document.body.style.background = 'url(' + background_url + ')  center center / cover no-repeat';
-                // document.body.style.background = 'url(' + background_url + ')';
-                // document.body.style.backgroundColor = 'aquamarine';
-                // document.body.style.backgroundRepeat = 'no-repeat no-repeat';
-                // document.body.style.backgroundAttachment = 'scroll';
-                // document.body.style.backgroundPosition = 'center center';
-                // document.body.style.backgroundSize = '100% 100%';
-                // center center / 100% 100% no-repeat scroll aquamarine;
+                /* document.body.style.background = 'url(' + background_url + ')';
+                document.body.style.backgroundColor = 'aquamarine';
+                document.body.style.backgroundRepeat = 'no-repeat no-repeat';
+                document.body.style.backgroundAttachment = 'scroll';
+                document.body.style.backgroundPosition = 'center center';
+                document.body.style.backgroundSize = '100% 100%';
+                center center / 100% 100% no-repeat scroll aquamarine;
 
-                // document.body.style.backgroundOrigin = 'body';
-                // document.body.style.backgroundClip = 'body';
+                document.body.style.backgroundOrigin = 'body';
+                document.body.style.backgroundClip = 'body'; */
             }
         }
 
         /* 下载源码 */
         function downloadSourceCode(url) {
             var a = document.createElement("a");
-            a.setAttribute("href", url);
+            a.setAttribute("href", 'javascript:;');
             a.setAttribute("target", "_blank");
             a.setAttribute("id", "openwin");
             document.body.appendChild(a);
@@ -333,51 +387,6 @@
         window.onload = init;
         window.onunload = close;
     </script>
-</head>
-
-<body>
-    <div id="warp">
-        <div class="content">
-            <div class="left">
-                <textarea name="left_textarea" id="left_textarea" onscroll="scrollSync(this)" onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
-                    placeholder="demo"></textarea>
-            </div>
-            <div class="middle">
-                <input name="prefix" id="prefix" placeholder="单行前缀" onkeyup="updateConfig(this)">
-                <input name="suffix" id="suffix" placeholder="单行后缀" onkeyup="updateConfig(this)">
-                <div class="checkbox_div_remove_spaces">
-                    <label for="" style="font-size: 14px;">消除空格： </label>
-                    <input type="checkbox" name="remove_spaces" id="remove_spaces" onclick="updateConfig(this)">
-                </div>
-                <div class="checkbox_div_scroll_sync">
-                    <label for="" style="font-size: 14px;">滚动同步： </label>
-                    <input type="checkbox" name="scroll_sync" id="scroll_sync" onclick="updateConfig(this)">
-                </div>
-                <input name="resetCache" type="button" value="reset" title="重置使用习惯" onclick="resetCache()">
-                <br/>
-                <input name="resetLeftText" type="button" value="<<清空" onclick="document.getElementById('left_textarea').value = '';">
-                <br/>
-                <input name="resetRightText" type="button" value="清空>>" onclick="document.getElementById('right_textarea').value = '';">
-                <br/>
-                <input name="add" type="button" value="添加>>" onclick="add()" title="Ctrl+Shift+A">
-                <br/>
-                <input name="remove" type="button" value="<<移除" onclick="remove()" title="Ctrl+Shift+E">
-                <br/>
-            </div>
-            <div class="right">
-                <textarea name="right_textarea" id="right_textarea" onscroll="scrollSync(this)" onblur="recordTextareaUseInfo(this)" onkeypress="textAreaKeyEvent()"
-                    placeholder='sql.append(" demo ");'></textarea>
-            </div>
-        </div>
-        <div class="footer">
-            <font size='2'>
-                <author title="恭喜你发现了隐藏彩蛋" id="author" onclick="easterEgg()">holy</author> |
-                <version>v_2.1.2</version> |
-                <date>2018</date> |
-                <label id="sourceCode" onclick="downloadSourceCode('code/work.rar')" title="源码">Code</label>
-            </font>
-        </div>
-    </div>
 </body>
 
 </html>
