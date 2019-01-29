@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="./favicon.ico" mce_href="./favicon.ico" type="image/x-icon">
-    <title>SQL format | WorkUtils</title>
+    <title>SQL format | WorkUtil</title>
     <style>
         html {
             height: 100%;
@@ -330,7 +330,7 @@
 
         /* 初始化 */
         function init() {
-            sqlFormatCache = storageUtil.getData('work_cache1205');
+            sqlFormatCache = storageUtil.getData('work_format_1541140358941');
             /*TODO 如果出现新配置参数，此处需要合并 现用配置 和 初始配置*/
             setfocus();
             setConfig();
@@ -339,7 +339,7 @@
 
         /* 页面关闭，缓存数据 */
         function close() {
-            storageUtil.setData('work_cache1205', sqlFormatCache);
+            storageUtil.setData('work_format_1541140358941', sqlFormatCache);
         }
 
         /* 文本框键盘事件 */
